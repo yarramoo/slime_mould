@@ -17,58 +17,15 @@ fn main() {
 }
 
 mod agent;
-use agent::Agent;
+use agent::{Agent, BasicAgent};
 
-#[derive(Clone, Copy, Debug)]
-struct EnvironmentCell {
-    habitable: bool,
-    occupied: bool,
-}
-
-const ENV_CELL_MASK_HABITABLE: u8 = 0b1000000;
-const ENV_CELL_MASK_OCCUPIED:  u8 = 0b10000000;
-
-impl EnvironmentCell {
-    fn new(habitable: bool, occupied: bool) -> Self {
-        EnvironmentCell {
-            habitable,
-            occupied
-        }
-    }
-}
-
-impl From<u8> for EnvironmentCell {
-    fn from(value: u8) -> Self {
-        let habitable: bool = (value & ENV_CELL_MASK_HABITABLE) != 0b0;
-        let occupied:  bool = (value & ENV_CELL_MASK_OCCUPIED) != 0b0;
-        Self {
-            habitable,
-            occupied
-        }
-    }
-}
-
-impl From<EnvironmentCell> for u8 {
-    fn from(value: EnvironmentCell) -> Self {
-        let mut result = 0;
-        if value.habitable {
-            result = result | ENV_CELL_MASK_HABITABLE;
-        }
-        if value.occupied {
-            result = result | ENV_CELL_MASK_OCCUPIED;
-        }
-        result
-    }
-}
-
-#[derive(Default, Clone, Copy)]
-struct TrailCell {
-    residue: f32,
-}
+mod cells;
+use cells::env_cell::EnvironmentCell;
+use cells::trail_cell::TrailCell;
 
 #[derive(Default)]
 struct World {
-    agents: Vec<Agent>,
+    agents: Vec<Box<dyn Agent>>,
     env_map: DataMap<EnvironmentCell>,
     trail_map: DataMap<TrailCell>,
 }
@@ -104,7 +61,7 @@ impl World {
                 // Generate a new agent and mark cell occupied
                 let r: f32 = rng.gen();
                 if r < POPULATION {
-                    let agent = Agent::new(x, y);
+                    let agent: Box<dyn Agent> = Box::new(BasicAgent::new(x, y));
                     agents.push(agent);
                     env_cell.occupied = true;
                 }
@@ -155,8 +112,8 @@ impl World {
         //  - It needs the new agent location, and the updated deposit state
         for agent in self.agents.iter_mut() {
             let (x, y) = agent.forward_position().rounded_coords();
-            if let Some(envCell) = self.env_map.get(x, y) {
-                if envCell.habitable && !envCell.occupied {
+            if let Some(env_cell) = self.env_map.get(x, y) {
+                if env_cell.habitable && !env_cell.occupied {
                     // Do the motor action
                     continue;
                 }
