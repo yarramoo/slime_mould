@@ -16,6 +16,18 @@ pub struct Agent {
 }
 
 impl Agent {
+    pub fn new(x: usize, y: usize) -> Self {
+        let mut rng = rand::thread_rng();
+        Self {
+            position: Position {
+                x: x as f32 + rng.gen::<f32>(),
+                y: y as f32 + rng.gen::<f32>(),
+            },
+            orientation: Orientation {
+                angle: rng.gen_range(0.0..360.0),
+            }
+        }
+    }
     pub fn motor_action(&mut self) {}
     pub fn forward_position(&self) -> Position {
         let (px, py) = self.position.coords();
