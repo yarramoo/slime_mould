@@ -1,7 +1,7 @@
 const ENV_CELL_MASK_HABITABLE: u8 = 0b1000000;
 const ENV_CELL_MASK_OCCUPIED:  u8 = 0b10000000;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct EnvironmentCell {
     pub habitable: bool,
     pub occupied: bool,
