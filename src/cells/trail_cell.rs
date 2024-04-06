@@ -6,6 +6,6 @@ pub struct TrailCell {
 
 impl From<&TrailCell> for [u8; 3] {
     fn from(value: &TrailCell) -> Self {
-        [0, 0, (value.residue * 100.) as u8]
+        [0, 0, (value.residue * 10.) as u8]
     }
 }

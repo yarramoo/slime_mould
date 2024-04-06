@@ -8,7 +8,7 @@ const ROTATION_ANGLE: f32 = 45.;
 const SENSOR_OFFSET_DISTANCE: f32 = 9.;
 const SENSOR_WIDTH: f32 = 1.;
 const STEP_SIZE: f32 = 1.;
-const CHEMO_DEPOSIT_AMOUNT: f32 = 5.;
+const CHEMO_DEPOSIT_AMOUNT: f32 = 50.;
 const RANDOM_DIR_CHANGE_P: f32 = 0.;
 const SENSITIVITY_MIN_THRESHOLD: f32 = 0.;
 
@@ -86,9 +86,9 @@ impl Agent for BasicAgent {
     fn sample(&self, trail_map: &DataMap<TrailCell>) -> (f32, f32, f32) {
         // Get the three locations of the sensors
         let position = self.position;
-        let front = position.shift(&self.orientation, &self.step_size()).rounded_coords();
-        let left  = position.shift(&(&self.orientation - self.sensor_angle()), &self.step_size()).rounded_coords();
-        let right = position.shift(&(&self.orientation + self.sensor_angle()), &self.step_size()).rounded_coords();
+        let front = position.shift(&self.orientation, &self.sensor_offset_distance()).rounded_coords();
+        let left  = position.shift(&(&self.orientation - self.sensor_angle()), &self.sensor_offset_distance()).rounded_coords();
+        let right = position.shift(&(&self.orientation + self.sensor_angle()), &self.sensor_offset_distance()).rounded_coords();
         let front_sample = trail_map.get(front.0, front.1).map_or(0., |trail_cell| trail_cell.residue);
         let left_sample = trail_map.get(front.0, front.1).map_or(0., |trail_cell| trail_cell.residue);
         let right_sample = trail_map.get(front.0, front.1).map_or(0., |trail_cell| trail_cell.residue);

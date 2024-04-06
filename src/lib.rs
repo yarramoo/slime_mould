@@ -38,42 +38,6 @@ impl Position {
     }
 }
 
-// #[derive(Clone, Copy)]
-// pub struct Orientation {
-//     pub radians: f32,
-// }
-
-// impl Orientation {
-//     pub fn new(radians: f32) -> Self {
-//         Self { radians }
-//     }
-//     pub fn new_random() -> Self {
-//         let mut rng = rand::thread_rng();
-//         let angle: f32 = rng.gen_range(0.0..2.);
-//         Self::new(angle)
-//     }
-// }
-
-// impl Add for Orientation {
-//     type Output = Self;
-
-//     fn add(self, rhs: Self) -> Self::Output {
-//         Self {
-//             radians: self.radians + rhs.radians
-//         }
-//     }
-// }
-
-// impl Sub for Orientation {
-//     type Output = Self;
-
-//     fn sub(self, rhs: Self) -> Self::Output {
-//         Self {
-//             radians: self.radians - rhs.radians
-//         }
-//     }
-// }
-
 #[derive(Debug, Clone)]
 pub struct DataMap<T: Debug> {
     pub width: usize,
@@ -86,42 +50,17 @@ impl<T: Debug> DataMap<T> {
         Self { width, height, data }
     }
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
+        if x < self.width && y < self.height { return None; }
         self.data.get(self.width * y + x)
     }
     pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
+        if x < self.width && y < self.height { return None; }
         self.data.get_mut(self.width * y + x)
     }
 }
-
-// impl<T: Into<u8>>
 
 impl<T: Debug> Default for DataMap<T> {
     fn default() -> Self {
         Self { width: 0, height: 0, data: Default::default() }
     }
 }
-
-// struct DataMapIterator<'a, T> {
-//     data: &'a Vec<T>,
-//     index: usize,
-// }
-
-// impl <'a, T> Iterator for DataMapIterator<'a, T> {
-//     type Item = &'a T;
-
-//     fn next(&mut self) -> Option<Self::Item> {
-        
-//     }
-// }
-
-
-
-// impl<T> IntoIterator for DataMap<T> {
-//     type Item = T;
-
-//     type IntoIter = std::vec::IntoIter<Self::Item>;
-
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.data.into_iter()
-//     }
-// }
