@@ -50,12 +50,12 @@ impl<T: Debug> DataMap<T> {
         Self { width, height, data }
     }
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
-        if x < self.width && y < self.height { return None; }
-        self.data.get(self.width * y + x)
+        if x >= self.width || y >= self.height { return None; }
+        return Some(unsafe { self.data.get_unchecked(self.width * y + x)} );
     }
     pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
-        if x < self.width && y < self.height { return None; }
-        self.data.get_mut(self.width * y + x)
+        if x >= self.width || y >= self.height { return None; }
+        return Some(unsafe { self.data.get_unchecked_mut(self.width * y + x)} );
     }
 }
 
